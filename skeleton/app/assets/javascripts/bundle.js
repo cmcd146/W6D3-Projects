@@ -93,6 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+
 const APIUtil = {
   followUser: id => {
     return $.ajax({
@@ -107,6 +108,15 @@ const APIUtil = {
       method: "DELETE",
       url: `/users/${id}/follow`,
       dataType: 'JSON'
+    });
+  },
+  
+  searchUsers: (queryVal,success) => {
+    return $.ajax({
+      method: "GET",
+      url: "/users/search",
+      data: {query: queryVal},
+      dataType: "JSON"
     });
   }
 };
@@ -200,20 +210,32 @@ $(()=>{
   !*** ./frontend/users_search.js ***!
   \**********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
+const APIUtil = __webpack_require__(/*! ./api_util.js */ "./frontend/api_util.js");
 class UsersSearch {
   constructor() {
+    this.$el = $('.users-search');
     this.$ul = $('ul.users');
-    this.input = $('.susers-input');
-    console.log(this.input);
-    debugger;
+    this.$input = $('.susers-input');
+    
+    this.$input.on("input", this.handleInput.bind(this));
+    
   }
   
-  
-  
-  
-  
+  handleInput (e) {
+    e.preventDefault();
+    APIUtil.searchUsers(this.$input.val())
+    .then((res)=>{
+      this.$ul.empty();
+      res.forEach((el)=>{
+        let li = $('<li/>');
+        li.text(el.username);
+        this.$ul.append(li);
+      });
+    });
+
+  }
 }
 
 

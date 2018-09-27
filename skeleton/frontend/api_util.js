@@ -1,3 +1,4 @@
+
 const APIUtil = {
   followUser: id => {
     return $.ajax({
@@ -12,6 +13,15 @@ const APIUtil = {
       method: "DELETE",
       url: `/users/${id}/follow`,
       dataType: 'JSON'
+    });
+  },
+  
+  searchUsers: (queryVal,success) => {
+    return $.ajax({
+      method: "GET",
+      url: "/users/search",
+      data: {query: queryVal},
+      dataType: "JSON"
     });
   }
 };
